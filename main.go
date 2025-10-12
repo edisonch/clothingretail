@@ -1,9 +1,8 @@
 package main
 
 import (
-	"clothingretail/conf"
+	"clothingretail/db"
 	"clothingretail/handlers"
-	"clothingretail/utils"
 	"log"
 
 	"github.com/gin-gonic/gin"
@@ -11,13 +10,13 @@ import (
 
 func main() {
 	// Initialize database
-	if err := conf.InitDB("./db/clothing.db"); err != nil {
+	if err := db.InitDB("./db/clothing.db"); err != nil {
 		log.Fatal("Failed to initialize database:", err)
 	}
-	defer conf.CloseDB()
+	defer db.CloseDB()
 
 	// Run migrations
-	if err := utils.RunMigration(conf.DB, "./db/001_init_category.up.sql"); err != nil {
+	if err := db.RunMigration(db.DB, "./db/001_init_category.up.sql"); err != nil {
 		log.Println("Migration warning:", err)
 	}
 
