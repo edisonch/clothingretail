@@ -27,12 +27,6 @@ var (
 
 	//go:embed config.toml
 	confgo []byte
-
-	SAP_ASHOST string
-	SAP_USER   string
-	SAP_PWD    string
-	SAP_SYSNR  string
-	SAP_CLIENT string
 )
 
 const (
@@ -53,7 +47,6 @@ func StartConfig() {
 	RunMode = Koan.String("runmode")
 	Log = GetLogger()
 
-	GetSAP()
 }
 
 func GetLogger() *zerolog.Logger {
@@ -219,13 +212,4 @@ func CheckRunMode() {
 	//}
 	//defer file.Close()
 	Log.Info().Msgf("logging to %s with RunMode: %s", Koan.String("completeFilename"), RunMode)
-}
-
-func GetSAP() {
-	SAP_ASHOST = Koan.String(RunMode + ".sap_host")
-	SAP_USER = Koan.String(RunMode + ".sap_user")
-	SAP_PWD = Koan.String(RunMode + ".sap_pwd")
-	SAP_SYSNR = Koan.String(RunMode + ".sap_sysnr")
-	SAP_CLIENT = Koan.String(RunMode + ".sap_client")
-
 }
