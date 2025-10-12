@@ -1,7 +1,7 @@
 package handlers
 
 import (
-	"clothingretail/conf"
+	"clothingretail/db"
 	"clothingretail/models"
 	"net/http"
 	"time"
@@ -22,7 +22,7 @@ func CreateCategory(c *gin.Context) {
 	category.UpdatedAt = time.Now()
 	category.ClothesCatStatus = 1
 
-	result, err := conf.DB.Exec(
+	result, err := db.DB.Exec(
 		"INSERT INTO clothing_category (clothes_cat_name, clothes_notes, clothes_cat_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?)",
 		category.ClothesCatName, category.ClothesNotes, category.ClothesCatStatus, category.CreatedAt, category.UpdatedAt,
 	)
@@ -40,7 +40,7 @@ func CreateCategory(c *gin.Context) {
 
 // GetCategories retrieves all clothing categories
 func GetCategories(c *gin.Context) {
-	rows, err := conf.DB.Query("SELECT id, clothes_cat_name, clothes_notes, clothes_cat_status, created_at, updated_at FROM clothing_category WHERE clothes_cat_status = 1")
+	rows, err := db.DB.Query("SELECT id, clothes_cat_name, clothes_notes, clothes_cat_status, created_at, updated_at FROM clothing_category WHERE clothes_cat_status = 1")
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 		return
@@ -65,7 +65,7 @@ func GetCategoryByID(c *gin.Context) {
 	id := c.Param("id")
 	var category models.ClothingCategory
 
-	err := conf.DB.QueryRow(
+	err := db.DB.QueryRow(
 		"SELECT id, clothes_cat_name, clothes_notes, clothes_cat_status, created_at, updated_at FROM clothing_category WHERE id = ?",
 		id,
 	).Scan(&category.ID, &category.ClothesCatName, &category.ClothesNotes, &category.ClothesCatStatus, &category.CreatedAt, &category.UpdatedAt)
@@ -90,7 +90,7 @@ func UpdateCategory(c *gin.Context) {
 
 	category.UpdatedAt = time.Now()
 
-	_, err := conf.DB.Exec(
+	_, err := db.DB.Exec(
 		"UPDATE clothing_category SET clothes_cat_name = ?, clothes_notes = ?, updated_at = ? WHERE id = ?",
 		category.ClothesCatName, category.ClothesNotes, category.UpdatedAt, id,
 	)
@@ -107,7 +107,7 @@ func UpdateCategory(c *gin.Context) {
 func DeleteCategory(c *gin.Context) {
 	id := c.Param("id")
 
-	_, err := conf.DB.Exec(
+	_, err := db.DB.Exec(
 		"UPDATE clothing_category SET clothes_cat_status = 2, updated_at = ? WHERE id = ?",
 		time.Now(), id,
 	)
