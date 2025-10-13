@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - Clothing Retail</title>
+    <link rel="stylesheet" href="/static/css/login.css">
+</head>
+<body>
+<div class="login-container">
+    <div class="login-box">
+        <h1>Clothing Retail</h1>
+        <h2>Login</h2>
+
+        <div id="error-message" class="error-message" style="display: none;"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label for="username">Username</label>
+                <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        placeholder="Enter username"
+                        maxlength="32"
+                        required
+                >
+                <span class="error-text" id="username-error"></span>
+            </div>
+
+            <div class="form-group">
+                <label for="pin">PIN (6 digits)</label>
+                <input
+                        type="password"
+                        id="pin"
+                        name="pin"
+                        placeholder="Enter 6-digit PIN"
+                        maxlength="6"
+                        required
+                >
+                <span class="error-text" id="pin-error"></span>
+            </div>
+
+            <button type="submit" class="login-btn">Login</button>
+        </form>
+    </div>
+</div>
+
+<script src="/static/js/login.js"></script>
+</body>
+</html>

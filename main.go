@@ -17,39 +17,67 @@ func main() {
 	}
 	defer db.CloseDB()
 
+	// Create default user if none exists
+	if err := handlers.CreateDefaultUser(); err != nil {
+		log.Println("Warning: Failed to create default user:", err)
+	}
+
 	// Initialize Gin router
 	router := gin.Default()
 
-	// Serve static files (HTML, CSS, JS)
-	router.StaticFile("/", "./templates/index.html")
+	// Serve static files (CSS, JS)
 	router.Static("/static", "./templates")
 
-	// API routes
-	api := router.Group("/api")
+	// Public routes (no authentication required)
+	router.GET("/login", func(c *gin.Context) {
+		c.File("./templates/login.html")
+	})
+
+	// Authentication API routes (public for login, but logout should be protected)
+	auth := router.Group("/api/auth")
 	{
-		// Category routes
-		api.POST("/categories", handlers.CreateCategory)
-		api.GET("/categories", handlers.GetCategories)
-		api.GET("/categories/:id", handlers.GetCategoryByID)
-		api.PUT("/categories/:id", handlers.UpdateCategory)
-		api.DELETE("/categories/:id", handlers.DeleteCategory)
+		auth.POST("/login", handlers.Login)
+	}
 
-		// Subcategory routes
-		api.POST("/categories-sub", handlers.CreateCategorySub)
-		api.GET("/categories-sub", handlers.GetCategoriesSub)
-		api.GET("/categories-sub/:id", handlers.GetCategorySubByID)
-		api.PUT("/categories-sub/:id", handlers.UpdateCategorySub)
-		api.DELETE("/categories-sub/:id", handlers.DeleteCategorySub)
+	// Protected routes - apply middleware
+	protected := router.Group("/")
+	protected.Use(handlers.AuthMiddleware())
+	{
+		// Serve index page (protected)
+		protected.GET("/", func(c *gin.Context) {
+			c.File("./templates/index.html")
+		})
 
-		// Customer routes
-		api.POST("/customers", handlers.CreateCustomer)
-		api.GET("/customers", handlers.GetCustomers)
-		api.GET("/customers/:id", handlers.GetCustomerByID)
+		// Logout route (protected - must be authenticated to logout)
+		protected.POST("/api/auth/logout", handlers.Logout)
 
-		// Rental routes
-		api.POST("/rentals", handlers.RentClothing)
-		api.POST("/rentals/return", handlers.ReturnClothing)
-		api.GET("/rentals", handlers.GetRentals)
+		// API routes (protected)
+		api := protected.Group("/api")
+		{
+			// Category routes
+			api.POST("/categories", handlers.CreateCategory)
+			api.GET("/categories", handlers.GetCategories)
+			api.GET("/categories/:id", handlers.GetCategoryByID)
+			api.PUT("/categories/:id", handlers.UpdateCategory)
+			api.DELETE("/categories/:id", handlers.DeleteCategory)
+
+			// Subcategory routes
+			api.POST("/categories-sub", handlers.CreateCategorySub)
+			api.GET("/categories-sub", handlers.GetCategoriesSub)
+			api.GET("/categories-sub/:id", handlers.GetCategorySubByID)
+			api.PUT("/categories-sub/:id", handlers.UpdateCategorySub)
+			api.DELETE("/categories-sub/:id", handlers.DeleteCategorySub)
+
+			// Customer routes
+			api.POST("/customers", handlers.CreateCustomer)
+			api.GET("/customers", handlers.GetCustomers)
+			api.GET("/customers/:id", handlers.GetCustomerByID)
+
+			// Rental routes
+			api.POST("/rentals", handlers.RentClothing)
+			api.POST("/rentals/return", handlers.ReturnClothing)
+			api.GET("/rentals", handlers.GetRentals)
+		}
 	}
 
 	// Start server
