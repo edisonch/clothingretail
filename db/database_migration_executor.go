@@ -2,21 +2,30 @@ package db
 
 import (
 	"database/sql"
-	"io/ioutil"
-	"log"
+	"fmt"
+
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/sqlite"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 )
 
-func RunMigration(db *sql.DB, migrationFile string) error {
-	sqlContent, err := ioutil.ReadFile(migrationFile)
+func RunMigration(db *sql.DB, migrationsPath string) error {
+	driver, err := sqlite.WithInstance(db, &sqlite.Config{})
 	if err != nil {
-		return err
+		return fmt.Errorf("could not create migration driver: %w", err)
 	}
 
-	_, err = db.Exec(string(sqlContent))
+	m, err := migrate.NewWithDatabaseInstance(
+		fmt.Sprintf("file://%s", migrationsPath),
+		"sqlite", driver)
 	if err != nil {
-		return err
+		return fmt.Errorf("could not create migration instance: %w", err)
 	}
 
-	log.Printf("Migration %s executed successfully", migrationFile)
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		return fmt.Errorf("could not run migrations: %w", err)
+	}
+
+	fmt.Println("Migrations executed successfully")
 	return nil
 }

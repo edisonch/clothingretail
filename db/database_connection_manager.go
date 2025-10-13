@@ -1,6 +1,7 @@
 package db
 
 import (
+	"clothingretail/conf"
 	"database/sql"
 	"log"
 
@@ -32,6 +33,13 @@ func InitDB(dbPath string) error {
 	}
 
 	log.Println("Database connection established")
+
+	migrationsPath := conf.Koan.String("ds_sqlite")
+	// Run migrations automatically
+	if err = RunMigration(DB, migrationsPath); err != nil {
+		return err
+	}
+
 	return nil
 }
 

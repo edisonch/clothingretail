@@ -155,6 +155,7 @@ func newRollingFile() io.Writer {
 	//})
 	return lumberjackwriter
 }
+
 func newConsoleWriter() io.Writer {
 	output := zerolog.ConsoleWriter{Out: os.Stdout,
 		TimeFormat: time.RFC3339Nano, PartsOrder: []string{zerolog.
