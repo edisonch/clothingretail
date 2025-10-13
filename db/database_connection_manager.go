@@ -1,13 +1,13 @@
 package db
 
 import (
-	"clothingretail/conf"
 	"database/sql"
 	"fmt"
 	"log"
 
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite"
+	_ "github.com/golang-migrate/migrate/v4/source/file"
 	_ "modernc.org/sqlite"
 )
 
@@ -37,7 +37,8 @@ func InitDB(dbPath string) error {
 
 	log.Println("Database connection established")
 
-	migrationsPath := conf.Koan.String("ds_sqlite")
+	// Use a proper migrations directory path instead of the db file path
+	migrationsPath := "db/migrate-sqlite"
 	// Run migrations automatically
 	if err = RunMigration(DB, migrationsPath); err != nil {
 		return err
@@ -51,7 +52,7 @@ func RunMigration(db *sql.DB, migrationsPath string) error {
 	if err != nil {
 		return fmt.Errorf("could not create migration driver: %w", err)
 	}
-
+	log.Println("Migrations path: ", migrationsPath)
 	m, err := migrate.NewWithDatabaseInstance(
 		fmt.Sprintf("file://%s", migrationsPath),
 		"sqlite", driver)

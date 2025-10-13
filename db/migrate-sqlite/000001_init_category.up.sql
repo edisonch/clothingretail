@@ -5,7 +5,7 @@
 -- clothes_cat_status contains the status of the category: 1 = active, 2 = inactive
 -- created_at contains the date and time when the category is created
 -- updated_at contains the date and time when the category is updated
-create table clothing_category if not exists (
+create table if not exists clothing_category (
     id integer primary key,
     clothes_cat_name text not null,
     clothes_notes text,
@@ -27,7 +27,7 @@ create table clothing_category if not exists (
 -- clothes_cat_status_sub contains the status of the subcategory: 1 = active, 2 = inactive
 -- created_at contains the date and time when the subcategory is created
 -- updated_at contains the date and time when the subcategory is updated
-create table clothing_category_sub if not exists (
+create table if not exists clothing_category_sub (
     id integer primary key,
     id_clothing_category integer not null REFERENCES clothing_category(id),
     clothes_cat_name_sub text not null,
@@ -50,7 +50,7 @@ create table clothing_category_sub if not exists (
 -- clothes_size_status contains the status of the size: 1 = active, 2 = inactive
 -- created_at contains the date and time when the size is created
 -- updated_at contains the date and time when the size is updated
-create table clothing_size if not exists (
+create table if not exists clothing_size (
     id integer primary key,
     id_clothing_category_sub integer not null REFERENCES clothing_category_sub(id),
     clothes_size_name text not null,
@@ -71,7 +71,7 @@ create table clothing_size if not exists (
 -- clothes_cat_status_sub contains the status of the inventory movement: 1 = active, 2 = inactive
 -- created_at contains the date and time when the inventory movement is created
 -- updated_at contains the date and time when the inventory movement is updated
-create table clothing_inventory_movement if not exists (
+create table if not exists clothing_inventory_movement (
     id integer primary key,
     id_clothing_category integer not null REFERENCES clothing_category_sub(id),
     id_clothing_size integer not null REFERENCES clothing_size(id),
@@ -94,7 +94,7 @@ create table clothing_inventory_movement if not exists (
 -- cust_notes contains the notes for the customer limit to 256 characters
 -- cust_status contains the status of the customer: 1 = active, 2 = inactive
 -- created_at contains the date and time when the customer is created
-create table clothing_customer if not exists (
+create table if not exists clothing_customer (
     id integer primary key,
     cust_name text not null,
     cust_address text not null,
@@ -121,7 +121,7 @@ create table clothing_customer if not exists (
 -- clothes_rent_date_actual_return contains the date and time when the rental is actual return
 -- created_at contains the date and time when the rental is created
 -- updated_at contains the date and time when the rental is updated
-create table clothing_rental if not exists (
+create table if not exists clothing_rental (
     id integer primary key,
     id_clothing_category_sub integer not null REFERENCES clothing_category_sub(id),
     id_clothing_size integer not null REFERENCES clothing_size(id),
@@ -144,7 +144,7 @@ create table clothing_rental if not exists (
 -- user_status contains the status of the users: 1 = active, 2 = inactive
 -- created_at contains the date and time when the users is created
 -- updated_at contains the date and time when the users is updated
-create table clothing_users if not exists (
+create table if not exists clothing_users (
     id integer primary key,
     username text not null,
     pin integer not null default 123456,

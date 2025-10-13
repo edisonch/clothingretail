@@ -12,7 +12,7 @@ import (
 func main() {
 	// Initialize database
 	conf.CheckRunMode()
-	if err := db.InitDB("./db/clothing.db"); err != nil {
+	if err := db.InitDB(conf.Koan.String(conf.RunMode + ".ds_sqlite")); err != nil {
 		log.Fatal("Failed to initialize database:", err)
 	}
 	defer db.CloseDB()
@@ -54,7 +54,7 @@ func main() {
 
 	// Start server
 	log.Println("Server starting on :8080")
-	if err := router.Run(":8080"); err != nil {
+	if err := router.Run(conf.Koan.String(conf.RunMode + ".port_api")); err != nil {
 		log.Fatal("Failed to start server:", err)
 	}
 }

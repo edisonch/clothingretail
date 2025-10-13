@@ -1,5 +1,5 @@
 appname = "clothingretail"
-runmode = "prod"
+runmode = "dev"
 
 [dev]
 ds_sqlite = "db/clothingretail_dev.db"
@@ -15,7 +15,7 @@ jsonLogOutput = true
 log_path_windows = "C:\\tmp\\clothingretail\\logs"
 file_path_windows = "C:\\tmp\\clothingretail\\files"
 logging_level = "DEBUG"
-port_api = ":9191"
+port_api = ":9120"
 seaweed_url="http://172.16.0.62:9333"
 seaweed_img_url="img.synnexmetrodata.com"
 qr_output_path="./files/output/"
@@ -34,7 +34,7 @@ jsonLogOutput = true
 log_path_windows = "C:\\tmp\\clothingretail\\log"
 file_path_windows = "C:\\tmp\\clothingretail\\files"
 logging_level = "INFO"
-port_api = ":9192"
+port_api = ":9121"
 seaweed_url="http://172.16.0.62:9333"
 seaweed_img_url="img.synnexmetrodata.com"
 qr_output_path="./files/output/"
