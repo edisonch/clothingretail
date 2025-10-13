@@ -53,7 +53,7 @@ func main() {
 	}
 
 	// Start server
-	log.Println("Server starting on :8080")
+	log.Printf("Server starting on %s\n", conf.Koan.String(conf.RunMode+".port_api"))
 	if err := router.Run(conf.Koan.String(conf.RunMode + ".port_api")); err != nil {
 		log.Fatal("Failed to start server:", err)
 	}
