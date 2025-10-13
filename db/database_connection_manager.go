@@ -3,8 +3,11 @@ package db
 import (
 	"clothingretail/conf"
 	"database/sql"
+	"fmt"
 	"log"
 
+	"github.com/golang-migrate/migrate/v4"
+	"github.com/golang-migrate/migrate/v4/database/sqlite"
 	_ "modernc.org/sqlite"
 )
 
@@ -40,6 +43,27 @@ func InitDB(dbPath string) error {
 		return err
 	}
 
+	return nil
+}
+
+func RunMigration(db *sql.DB, migrationsPath string) error {
+	driver, err := sqlite.WithInstance(db, &sqlite.Config{})
+	if err != nil {
+		return fmt.Errorf("could not create migration driver: %w", err)
+	}
+
+	m, err := migrate.NewWithDatabaseInstance(
+		fmt.Sprintf("file://%s", migrationsPath),
+		"sqlite", driver)
+	if err != nil {
+		return fmt.Errorf("could not create migration instance: %w", err)
+	}
+
+	if err := m.Up(); err != nil && err != migrate.ErrNoChange {
+		return fmt.Errorf("could not run migrations: %w", err)
+	}
+
+	fmt.Println("Migrations executed successfully")
 	return nil
 }
 
