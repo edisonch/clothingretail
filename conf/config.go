@@ -39,6 +39,18 @@ const (
 	OS_MAINFRAME    = 7
 )
 
+// Add a new struct to manage daily rotation
+type DailyRotationWriter struct {
+	mu           sync.Mutex
+	currentFile  *lumberjack.Logger
+	currentDate  string
+	basePath     string
+	baseFilename string
+	maxBackups   int
+	maxSize      int
+	maxAge       int
+}
+
 func StartConfig() {
 	if err := Koan.Load(rawbytes.Provider(confgo), toml.Parser()); err != nil {
 		fmt.Printf("ERROR=%e\n", err)
@@ -140,20 +152,38 @@ func createFileFolder() {
 	//}
 }
 
-func newRollingFile() io.Writer {
+//func newRollingFile() io.Writer {
+//
+//	lumberjackwriter := &lumberjack.Logger{
+//		Filename:   Koan.String("completeFilename"),
+//		MaxBackups: Koan.Int(RunMode + ".log_maxbackup"), // files
+//		MaxSize:    Koan.Int(RunMode + ".log_maxsize"),   // megabytes
+//		MaxAge:     Koan.Int(RunMode + ".log_maxage"),    // days
+//		Compress:   true,
+//	}
+//fmt.Printf("rolling completeFilename %s\n", Koan.String("completeFilename"))
+//writer := diode.NewWriter(lumberjackwriter, 1000, 10*time.Millisecond, func(missed int) {
+//	fmt.Printf("Logger Dropped %d messages", missed)
+//})
+//	return lumberjackwriter
+//}
 
-	lumberjackwriter := &lumberjack.Logger{
-		Filename:   Koan.String("completeFilename"),
-		MaxBackups: Koan.Int(RunMode + ".log_maxbackup"), // files
-		MaxSize:    Koan.Int(RunMode + ".log_maxsize"),   // megabytes
-		MaxAge:     Koan.Int(RunMode + ".log_maxage"),    // days
-		Compress:   true,
+func newRollingFile() io.Writer {
+	filepath := Koan.String("filepath")
+	filename := Koan.String(RunMode + ".log_filename")
+
+	// Remove .log extension if present for base filename
+	baseFilename := strings.TrimSuffix(filename, ".log")
+
+	dailyWriter := &DailyRotationWriter{
+		basePath:     filepath,
+		baseFilename: baseFilename,
+		maxBackups:   Koan.Int(RunMode + ".log_maxbackup"),
+		maxSize:      Koan.Int(RunMode + ".log_maxsize"),
+		maxAge:       Koan.Int(RunMode + ".log_maxage"),
 	}
-	//fmt.Printf("rolling completeFilename %s\n", Koan.String("completeFilename"))
-	//writer := diode.NewWriter(lumberjackwriter, 1000, 10*time.Millisecond, func(missed int) {
-	//	fmt.Printf("Logger Dropped %d messages", missed)
-	//})
-	return lumberjackwriter
+
+	return dailyWriter
 }
 
 func newConsoleWriter() io.Writer {
@@ -213,4 +243,42 @@ func CheckRunMode() {
 	//}
 	//defer file.Close()
 	Log.Info().Msgf("logging to %s with RunMode: %s", Koan.String("completeFilename"), RunMode)
+}
+
+func (d *DailyRotationWriter) Write(p []byte) (n int, err error) {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+
+	currentTime := time.Now()
+	dateStr := currentTime.Format("2006-01-02")
+
+	// Check if we need to rotate to a new day
+	if d.currentDate != dateStr || d.currentFile == nil {
+		if d.currentFile != nil {
+			d.currentFile.Close()
+		}
+
+		dailyFilename := fmt.Sprintf("%s_%s.log", d.baseFilename, dateStr)
+		dailyFilePath := d.basePath + string(os.PathSeparator) + dailyFilename
+
+		d.currentFile = &lumberjack.Logger{
+			Filename:   dailyFilePath,
+			MaxBackups: d.maxBackups,
+			MaxSize:    d.maxSize,
+			MaxAge:     d.maxAge,
+			Compress:   true,
+		}
+		d.currentDate = dateStr
+	}
+
+	return d.currentFile.Write(p)
+}
+
+func (d *DailyRotationWriter) Close() error {
+	d.mu.Lock()
+	defer d.mu.Unlock()
+	if d.currentFile != nil {
+		return d.currentFile.Close()
+	}
+	return nil
 }
