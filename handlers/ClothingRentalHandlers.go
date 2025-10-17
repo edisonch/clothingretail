@@ -39,7 +39,7 @@ func RentClothing(c *gin.Context) {
 	_, err = db.DB.Exec(
 		`INSERT INTO clothing_rental (id, id_clothing_category_sub, id_clothing_size, id_clothing_customer, 
          clothes_qty_rent, clothes_qty_return, clothes_rent_date_begin, clothes_rent_date_end, 
-         clothes_rent_date_actual_pickup, clothes_rent_date_actual_return, clothes_cat_status_sub, 
+         clothes_rent_date_actual_pickup, clothes_rent_date_actual_return, clothes_rent_status, 
          created_at, updated_at) VALUES (?, ?, ?, ?, ?, 0, ?, ?, ?, '0001-01-01', 1, ?, ?)`,
 		rentalID, req.IDClothingCategorySub, req.IDClothingSize, req.IDClothingCustomer, req.ClothesQtyRent,
 		dateBegin, dateEnd, now, now, now,
@@ -55,7 +55,7 @@ func RentClothing(c *gin.Context) {
 	_, err = db.DB.Exec(
 		`INSERT INTO clothing_inventory_movement (id, id_clothing_category, id_clothing_size, 
          clothes_movement_action, clothes_qty_in, clothes_qty_out, clothes_qty_total, 
-         clothes_cat_status_sub, created_at, updated_at) 
+         clothes_rent_status, created_at, updated_at) 
          VALUES (?, ?, ?, 1, 0, ?, (SELECT COALESCE(SUM(clothes_qty_in - clothes_qty_out), 0) FROM clothing_inventory_movement 
          WHERE id_clothing_category = ? AND id_clothing_size = ?), 1, ?, ?)`,
 		inventoryID, req.IDClothingCategorySub, req.IDClothingSize, req.ClothesQtyRent,
@@ -115,7 +115,7 @@ func ReturnClothing(c *gin.Context) {
 	// Update rental record
 	_, err = db.DB.Exec(
 		`UPDATE clothing_rental SET clothes_qty_return = ?, clothes_rent_date_actual_return = ?, 
-         clothes_cat_status_sub = ?, updated_at = ? WHERE id = ?`,
+         clothes_rent_status = ?, updated_at = ? WHERE id = ?`,
 		newReturnQty, now, newStatus, now, req.RentalID,
 	)
 
@@ -129,7 +129,7 @@ func ReturnClothing(c *gin.Context) {
 	_, err = db.DB.Exec(
 		`INSERT INTO clothing_inventory_movement (id, id_clothing_category, id_clothing_size, 
          clothes_movement_action, clothes_qty_in, clothes_qty_out, clothes_qty_total, 
-         clothes_cat_status_sub, created_at, updated_at) 
+         clothes_rent_status, created_at, updated_at) 
          VALUES (?, ?, ?, 2, ?, 0, (SELECT COALESCE(SUM(clothes_qty_in - clothes_qty_out), 0) FROM clothing_inventory_movement 
          WHERE id_clothing_category = ? AND id_clothing_size = ?), 1, ?, ?)`,
 		inventoryID, rental.IDClothingCategorySub, rental.IDClothingSize, req.ClothesQtyReturn,
@@ -154,7 +154,7 @@ func GetRentals(c *gin.Context) {
 
 	query := `SELECT id, id_clothing_category_sub, id_clothing_size, id_clothing_customer, 
               clothes_qty_rent, clothes_qty_return, clothes_rent_date_begin, clothes_rent_date_end, 
-              clothes_rent_date_actual_pickup, clothes_rent_date_actual_return, clothes_cat_status_sub, 
+              clothes_rent_date_actual_pickup, clothes_rent_date_actual_return, clothes_rent_status, 
               created_at, updated_at FROM clothing_rental WHERE 1=1`
 
 	var args []interface{}
@@ -184,7 +184,7 @@ func GetRentals(c *gin.Context) {
 		if err := rows.Scan(&rental.ID, &rental.IDClothingCategorySub, &rental.IDClothingSize,
 			&rental.IDClothingCustomer, &rental.ClothesQtyRent, &rental.ClothesQtyReturn,
 			&rental.ClothesRentDateBegin, &rental.ClothesRentDateEnd, &rental.ClothesRentDateActualPickup,
-			&rental.ClothesRentDateActualReturn, &rental.ClothesCatStatusSub, &rental.CreatedAt,
+			&rental.ClothesRentDateActualReturn, &rental.ClothesRentStatus, &rental.CreatedAt,
 			&rental.UpdatedAt); err != nil {
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
