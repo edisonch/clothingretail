@@ -48,6 +48,23 @@ func main() {
 			c.File("./templates/index.html")
 		})
 
+		// HTML page routes (protected)
+		protected.GET("/create-category", func(c *gin.Context) {
+			c.File("./templates/create-category.html")
+		})
+		protected.GET("/create-category-sub", func(c *gin.Context) {
+			c.File("./templates/create-category-sub.html")
+		})
+		protected.GET("/create-customer", func(c *gin.Context) {
+			c.File("./templates/create-customer.html")
+		})
+		protected.GET("/create-rental", func(c *gin.Context) {
+			c.File("./templates/create-rental.html")
+		})
+		protected.GET("/return-rental", func(c *gin.Context) {
+			c.File("./templates/return-rental.html")
+		})
+
 		// Logout route (protected - must be authenticated to logout)
 		protected.POST("/api/auth/logout", handlers.Logout)
 

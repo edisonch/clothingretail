@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Return Rental - Clothing Retail</title>
+    <link rel="stylesheet" href="/static/css/create-rental.css">
+</head>
+<body>
+<div class="container">
+    <h1>Return Rental</h1>
+    <p class="subtitle">Process a clothing rental return</p>
+
+    <div id="message" class="message"></div>
+
+    <form id="returnForm">
+        <div class="form-group">
+            <label for="customer">
+                Customer <span style="color: red;">*</span>
+            </label>
+            <select
+                    id="customer"
+                    name="id_clothing_customer"
+                    required
+            >
+                <option value="">Select a customer...</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="rental">
+                Active Rental <span style="color: red;">*</span>
+            </label>
+            <select
+                    id="rental"
+                    name="rental_id"
+                    required
+                    disabled
+            >
+                <option value="">Select a customer first...</option>
+            </select>
+        </div>
+
+        <div id="rentalDetails" class="info-box" style="display: none;">
+            <h3>Rental Details</h3>
+            <div class="info-content">
+                <p><strong>Item:</strong> <span id="detailItem">-</span></p>
+                <p><strong>Size:</strong> <span id="detailSize">-</span></p>
+                <p><strong>Rented Quantity:</strong> <span id="detailQtyRent">-</span></p>
+                <p><strong>Already Returned:</strong> <span id="detailQtyReturned">-</span></p>
+                <p><strong>Remaining:</strong> <span id="detailQtyRemaining">-</span></p>
+                <p><strong>Rental Start:</strong> <span id="detailDateBegin">-</span></p>
+                <p><strong>Expected End:</strong> <span id="detailDateEnd">-</span></p>
+                <p><strong>Status:</strong> <span id="detailStatus">-</span></p>
+            </div>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="quantityReturn">
+                    Quantity to Return <span style="color: red;">*</span>
+                </label>
+                <input
+                        type="number"
+                        id="quantityReturn"
+                        name="clothes_qty_return"
+                        min="1"
+                        value="1"
+                        required
+                        disabled
+                        placeholder="Enter quantity to return"
+                />
+                <small style="color: #666; font-size: 12px;">Max: <span id="maxQuantity">-</span></small>
+            </div>
+
+            <div class="form-group">
+                <label for="returnDate">
+                    Actual Return Date <span style="color: red;">*</span>
+                </label>
+                <input
+                        type="datetime-local"
+                        id="returnDate"
+                        name="actual_return_date"
+                        required
+                        disabled
+                />
+            </div>
+        </div>
+
+        <div id="returnSummary" class="info-box" style="display: none; border-color: #28a745;">
+            <h3>Return Summary</h3>
+            <div class="info-content">
+                <p><strong>Customer:</strong> <span id="summaryCustomer">-</span></p>
+                <p><strong>Returning:</strong> <span id="summaryQuantity">-</span></p>
+                <p><strong>Return Date:</strong> <span id="summaryReturnDate">-</span></p>
+                <p><strong>Days Rented:</strong> <span id="summaryDaysRented">-</span></p>
+                <p id="lateWarning" style="display: none; color: #f44336;">
+                    <strong>⚠️ Late Return:</strong> <span id="summaryDaysLate">-</span>
+                </p>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+            <button type="submit" class="btn-submit" id="submitBtn" disabled>Process Return</button>
+        </div>
+
+        <div class="loading" id="loading">Processing return...</div>
+    </form>
+</div>
+
+<script src="/static/js/return-rental.js"></script>
+</body>
+</html>

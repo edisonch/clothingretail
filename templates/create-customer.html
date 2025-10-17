@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Customer - Clothing Retail</title>
+    <link rel="stylesheet" href="/static/css/create-customer.css">
+</head>
+<body>
+<div class="container">
+    <h1>Create New Customer</h1>
+    <p class="subtitle">Add a new customer to the system</p>
+
+    <div id="message" class="message"></div>
+
+    <form id="customerForm">
+        <div class="form-row">
+            <div class="form-group">
+                <label for="customerName">
+                    Customer Name <span style="color: red;">*</span>
+                </label>
+                <input
+                        type="text"
+                        id="customerName"
+                        name="cust_name"
+                        maxlength="64"
+                        required
+                        placeholder="Enter customer name (max 64 characters)"
+                />
+                <div class="char-count" id="nameCount">0 / 64</div>
+            </div>
+
+            <div class="form-group">
+                <label for="customerPhone">
+                    Phone Number <span style="color: red;">*</span>
+                </label>
+                <input
+                        type="tel"
+                        id="customerPhone"
+                        name="cust_phone"
+                        maxlength="16"
+                        required
+                        placeholder="Enter phone number (max 16 characters)"
+                />
+                <div class="char-count" id="phoneCount">0 / 16</div>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="customerEmail">
+                Email Address <span style="color: red;">*</span>
+            </label>
+            <input
+                    type="email"
+                    id="customerEmail"
+                    name="cust_email"
+                    maxlength="128"
+                    required
+                    placeholder="Enter email address (max 128 characters)"
+            />
+            <div class="char-count" id="emailCount">0 / 128</div>
+        </div>
+
+        <div class="form-group">
+            <label for="customerAddress">
+                Address <span style="color: red;">*</span>
+            </label>
+            <textarea
+                    id="customerAddress"
+                    name="cust_address"
+                    maxlength="256"
+                    required
+                    placeholder="Enter address (max 256 characters)"
+                    rows="3"
+            ></textarea>
+            <div class="char-count" id="addressCount">0 / 256</div>
+        </div>
+
+        <div class="form-group">
+            <label for="customerCity">
+                City <span style="color: red;">*</span>
+            </label>
+            <input
+                    type="text"
+                    id="customerCity"
+                    name="cust_city"
+                    maxlength="64"
+                    required
+                    placeholder="Enter city (max 64 characters)"
+            />
+            <div class="char-count" id="cityCount">0 / 64</div>
+        </div>
+
+        <div class="form-group">
+            <label for="customerNotes">
+                Notes (Optional)
+            </label>
+            <textarea
+                    id="customerNotes"
+                    name="cust_notes"
+                    maxlength="256"
+                    placeholder="Enter additional notes (max 256 characters)"
+                    rows="3"
+            ></textarea>
+            <div class="char-count" id="notesCount">0 / 256</div>
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+            <button type="submit" class="btn-submit" id="submitBtn">Create Customer</button>
+        </div>
+
+        <div class="loading" id="loading">Creating customer...</div>
+    </form>
+</div>
+
+<script src="/static/js/create-customer.js"></script>
+</body>
+</html>

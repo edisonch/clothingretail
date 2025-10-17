@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -27,23 +28,46 @@
         </div>
         <ul class="nav-menu">
             <li class="nav-item">
-                <a href="#dashboard" class="nav-link active">Dashboard</a>
+                <a href="/" class="nav-link active">Dashboard</a>
             </li>
+
+            <li class="nav-section">Categories</li>
             <li class="nav-item">
-                <a href="#inventory" class="nav-link">Inventory</a>
+                <ul class="nav-submenu">
+                    <li><a href="/create-category" class="nav-link">Create Category</a></li>
+                    <li><a href="/create-category-sub" class="nav-link">Create Subcategory</a></li>
+                    <li><a href="#view-categories" class="nav-link">View All Categories</a></li>
+                </ul>
             </li>
+
+            <li class="nav-section">Customers</li>
             <li class="nav-item">
-                <a href="#categories" class="nav-link">Categories</a>
+                <ul class="nav-submenu">
+                    <li><a href="/create-customer" class="nav-link">Create Customer</a></li>
+                    <li><a href="#view-customers" class="nav-link">View All Customers</a></li>
+                </ul>
             </li>
+
+            <li class="nav-section">Rentals</li>
             <li class="nav-item">
-                <a href="#rentals" class="nav-link">Rentals</a>
+                <ul class="nav-submenu">
+                    <li><a href="/create-rental" class="nav-link">Create Rental</a></li>
+                    <li><a href="/return-rental" class="nav-link">Return Rental</a></li>
+                    <li><a href="#view-rentals" class="nav-link">View All Rentals</a></li>
+                    <li><a href="#active-rentals" class="nav-link">Active Rentals</a></li>
+                </ul>
             </li>
+
+            <li class="nav-section">Reports</li>
             <li class="nav-item">
-                <a href="#customers" class="nav-link">Customers</a>
+                <ul class="nav-submenu">
+                    <li><a href="#inventory-report" class="nav-link">Inventory Report</a></li>
+                    <li><a href="#rental-report" class="nav-link">Rental Report</a></li>
+                    <li><a href="#customer-report" class="nav-link">Customer Report</a></li>
+                </ul>
             </li>
-            <li class="nav-item">
-                <a href="#reports" class="nav-link">Reports</a>
-            </li>
+
+            <li class="nav-section">System</li>
             <li class="nav-item">
                 <a href="#settings" class="nav-link">Settings</a>
             </li>
@@ -61,6 +85,32 @@
         <div class="content-wrapper">
             <h2>Welcome to Clothing Inventory Admin</h2>
             <p>Select an option from the menu to get started.</p>
+
+            <div class="dashboard-quick-actions">
+                <h3>Quick Actions</h3>
+                <div class="quick-actions-grid">
+                    <a href="/create-category" class="quick-action-card quick-action-primary">
+                        <span class="quick-action-icon">➕</span>
+                        <span class="quick-action-text">Create Category</span>
+                    </a>
+                    <a href="/create-category-sub" class="quick-action-card quick-action-primary">
+                        <span class="quick-action-icon">➕</span>
+                        <span class="quick-action-text">Create Subcategory</span>
+                    </a>
+                    <a href="/create-customer" class="quick-action-card quick-action-primary">
+                        <span class="quick-action-icon">👤</span>
+                        <span class="quick-action-text">Add Customer</span>
+                    </a>
+                    <a href="/create-rental" class="quick-action-card quick-action-success">
+                        <span class="quick-action-icon">📦</span>
+                        <span class="quick-action-text">New Rental</span>
+                    </a>
+                    <a href="/return-rental" class="quick-action-card quick-action-warning">
+                        <span class="quick-action-icon">↩️</span>
+                        <span class="quick-action-text">Return Rental</span>
+                    </a>
+                </div>
+            </div>
         </div>
     </main>
 </div>

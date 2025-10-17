@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Subcategory - Clothing Retail</title>
+    <link rel="stylesheet" href="/static/css/create-category-sub.css">
+</head>
+<body>
+<div class="container">
+    <h1>Create New Subcategory</h1>
+    <p class="subtitle">Add a new clothing subcategory to the system</p>
+
+    <div id="message" class="message"></div>
+
+    <form id="categorySubForm">
+        <div class="form-group">
+            <label for="parentCategory">
+                Parent Category <span style="color: red;">*</span>
+            </label>
+            <select
+                    id="parentCategory"
+                    name="id_clothing_category"
+                    required
+            >
+                <option value="">Select a category...</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="subCategoryName">
+                Subcategory Name <span style="color: red;">*</span>
+            </label>
+            <input
+                    type="text"
+                    id="subCategoryName"
+                    name="clothes_cat_name_sub"
+                    maxlength="32"
+                    required
+                    placeholder="Enter subcategory name (max 32 characters)"
+            />
+            <div class="char-count" id="nameCount">0 / 32</div>
+        </div>
+
+        <div class="form-group">
+            <label for="subCategoryLocation">
+                Location <span style="color: red;">*</span>
+            </label>
+            <input
+                    type="text"
+                    id="subCategoryLocation"
+                    name="clothes_cat_location_sub"
+                    maxlength="64"
+                    required
+                    placeholder="Enter location (max 64 characters)"
+            />
+            <div class="char-count" id="locationCount">0 / 64</div>
+        </div>
+
+        <div class="form-group">
+            <label>Pictures (Optional - Max 5)</label>
+            <div class="pictures-container">
+                <div class="picture-upload" data-index="1">
+                    <input type="file" id="picture1" accept="image/*" class="picture-input">
+                    <label for="picture1" class="picture-label">
+                        <span class="upload-icon">📷</span>
+                        <span class="upload-text">Picture 1</span>
+                    </label>
+                    <div class="picture-preview" id="preview1"></div>
+                    <button type="button" class="remove-picture" data-index="1">✕</button>
+                </div>
+
+                <div class="picture-upload" data-index="2">
+                    <input type="file" id="picture2" accept="image/*" class="picture-input">
+                    <label for="picture2" class="picture-label">
+                        <span class="upload-icon">📷</span>
+                        <span class="upload-text">Picture 2</span>
+                    </label>
+                    <div class="picture-preview" id="preview2"></div>
+                    <button type="button" class="remove-picture" data-index="2">✕</button>
+                </div>
+
+                <div class="picture-upload" data-index="3">
+                    <input type="file" id="picture3" accept="image/*" class="picture-input">
+                    <label for="picture3" class="picture-label">
+                        <span class="upload-icon">📷</span>
+                        <span class="upload-text">Picture 3</span>
+                    </label>
+                    <div class="picture-preview" id="preview3"></div>
+                    <button type="button" class="remove-picture" data-index="3">✕</button>
+                </div>
+
+                <div class="picture-upload" data-index="4">
+                    <input type="file" id="picture4" accept="image/*" class="picture-input">
+                    <label for="picture4" class="picture-label">
+                        <span class="upload-icon">📷</span>
+                        <span class="upload-text">Picture 4</span>
+                    </label>
+                    <div class="picture-preview" id="preview4"></div>
+                    <button type="button" class="remove-picture" data-index="4">✕</button>
+                </div>
+
+                <div class="picture-upload" data-index="5">
+                    <input type="file" id="picture5" accept="image/*" class="picture-input">
+                    <label for="picture5" class="picture-label">
+                        <span class="upload-icon">📷</span>
+                        <span class="upload-text">Picture 5</span>
+                    </label>
+                    <div class="picture-preview" id="preview5"></div>
+                    <button type="button" class="remove-picture" data-index="5">✕</button>
+                </div>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+            <button type="submit" class="btn-submit" id="submitBtn">Create Subcategory</button>
+        </div>
+
+        <div class="loading" id="loading">Creating subcategory...</div>
+    </form>
+</div>
+
+<script src="/static/js/create-category-sub.js"></script>
+</body>
+</html>

@@ -561,3 +561,117 @@ body {
         min-height: 48px;
     }
 }
+
+/* Navigation Menu Enhancements */
+.nav-section {
+    padding: 15px 20px 5px;
+    font-size: 12px;
+    font-weight: bold;
+    color: #999;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 10px;
+}
+
+.nav-submenu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.nav-submenu .nav-link {
+    padding-left: 35px;
+    font-size: 14px;
+    color: #555;
+}
+
+.nav-submenu .nav-link:hover {
+    background-color: #f5f5f5;
+}
+
+/* Dashboard Quick Actions */
+.dashboard-quick-actions {
+    margin-top: 40px;
+}
+
+.dashboard-quick-actions h3 {
+    color: #333;
+    margin-bottom: 20px;
+    font-size: 20px;
+}
+
+.quick-actions-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 20px;
+}
+
+.quick-action-card {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 25px 20px;
+    text-decoration: none;
+    border-radius: 10px;
+    text-align: center;
+    font-weight: bold;
+    color: white;
+    transition: transform 0.2s, box-shadow 0.2s;
+    min-height: 120px;
+}
+
+.quick-action-card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.15);
+}
+
+.quick-action-icon {
+    font-size: 32px;
+    margin-bottom: 10px;
+    display: block;
+}
+
+.quick-action-text {
+    font-size: 14px;
+    display: block;
+}
+
+.quick-action-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+}
+
+.quick-action-success {
+    background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+}
+
+.quick-action-warning {
+    background: linear-gradient(135deg, #ffc107 0%, #ff9800 100%);
+}
+
+/* Responsive adjustments for quick actions */
+@media (max-width: 768px) {
+    .quick-actions-grid {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+        gap: 15px;
+    }
+
+    .quick-action-card {
+        padding: 20px 15px;
+        min-height: 100px;
+    }
+
+    .quick-action-icon {
+        font-size: 28px;
+    }
+
+    .quick-action-text {
+        font-size: 13px;
+    }
+}
+
+@media (max-width: 480px) {
+    .quick-actions-grid {
+        grid-template-columns: 1fr;
+    }
+}

@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Rental - Clothing Retail</title>
+    <link rel="stylesheet" href="/static/css/create-rental.css">
+</head>
+<body>
+<div class="container">
+    <h1>Create New Rental</h1>
+    <p class="subtitle">Add a new clothing rental to the system</p>
+
+    <div id="message" class="message"></div>
+
+    <form id="rentalForm">
+        <div class="form-group">
+            <label for="customer">
+                Customer <span style="color: red;">*</span>
+            </label>
+            <select
+                    id="customer"
+                    name="id_clothing_customer"
+                    required
+            >
+                <option value="">Select a customer...</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="category">
+                Category <span style="color: red;">*</span>
+            </label>
+            <select
+                    id="category"
+                    name="category"
+                    required
+            >
+                <option value="">Select a category...</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="subcategory">
+                Subcategory <span style="color: red;">*</span>
+            </label>
+            <select
+                    id="subcategory"
+                    name="id_clothing_category_sub"
+                    required
+                    disabled
+            >
+                <option value="">Select a category first...</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="size">
+                Size <span style="color: red;">*</span>
+            </label>
+            <select
+                    id="size"
+                    name="id_clothing_size"
+                    required
+                    disabled
+            >
+                <option value="">Select a subcategory first...</option>
+            </select>
+        </div>
+
+        <div class="form-row">
+            <div class="form-group">
+                <label for="quantity">
+                    Quantity <span style="color: red;">*</span>
+                </label>
+                <input
+                        type="number"
+                        id="quantity"
+                        name="clothes_qty_rent"
+                        min="1"
+                        value="1"
+                        required
+                        placeholder="Enter quantity"
+                />
+            </div>
+
+            <div class="form-group">
+                <label for="rentDateBegin">
+                    Rental Start Date <span style="color: red;">*</span>
+                </label>
+                <input
+                        type="datetime-local"
+                        id="rentDateBegin"
+                        name="rent_date_begin"
+                        required
+                />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label for="rentDateEnd">
+                Rental End Date <span style="color: red;">*</span>
+            </label>
+            <input
+                    type="datetime-local"
+                    id="rentDateEnd"
+                    name="rent_date_end"
+                    required
+            />
+        </div>
+
+        <div class="info-box" id="infoBox" style="display: none;">
+            <h3>Rental Summary</h3>
+            <div class="info-content">
+                <p><strong>Customer:</strong> <span id="infoCustomer">-</span></p>
+                <p><strong>Item:</strong> <span id="infoItem">-</span></p>
+                <p><strong>Size:</strong> <span id="infoSize">-</span></p>
+                <p><strong>Quantity:</strong> <span id="infoQuantity">-</span></p>
+                <p><strong>Rental Period:</strong> <span id="infoPeriod">-</span></p>
+                <p><strong>Duration:</strong> <span id="infoDuration">-</span></p>
+            </div>
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+            <button type="submit" class="btn-submit" id="submitBtn">Create Rental</button>
+        </div>
+
+        <div class="loading" id="loading">Creating rental...</div>
+    </form>
+</div>
+
+<script src="/static/js/create-rental.js"></script>
+</body>
+</html>

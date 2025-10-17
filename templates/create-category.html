@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Category - Clothing Retail</title>
+    <link rel="stylesheet" href="/static/css/create-category.css">
+</head>
+<body>
+<div class="container">
+    <h1>Create New Category</h1>
+    <p class="subtitle">Add a new clothing category to the system</p>
+
+    <div id="message" class="message"></div>
+
+    <form id="categoryForm">
+        <div class="form-group">
+            <label for="categoryName">
+                Category Name <span style="color: red;">*</span>
+            </label>
+            <input
+                    type="text"
+                    id="categoryName"
+                    name="clothes_cat_name"
+                    maxlength="32"
+                    required
+                    placeholder="Enter category name (max 32 characters)"
+            />
+            <div class="char-count" id="nameCount">0 / 32</div>
+        </div>
+
+        <div class="form-group">
+            <label for="categoryNotes">
+                Notes (Optional)
+            </label>
+            <textarea
+                    id="categoryNotes"
+                    name="clothes_notes"
+                    maxlength="256"
+                    placeholder="Enter additional notes (max 256 characters)"
+            ></textarea>
+            <div class="char-count" id="notesCount">0 / 256</div>
+        </div>
+
+        <div class="button-group">
+            <button type="button" class="btn-cancel" id="cancelBtn">Cancel</button>
+            <button type="submit" class="btn-submit" id="submitBtn">Create Category</button>
+        </div>
+
+        <div class="loading" id="loading">Creating category...</div>
+    </form>
+</div>
+
+<script src="/static/js/create-category.js"></script>
+</body>
+</html>
