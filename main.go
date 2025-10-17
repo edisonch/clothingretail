@@ -52,8 +52,14 @@ func main() {
 		protected.GET("/create-category", func(c *gin.Context) {
 			c.File("./templates/create-category.html")
 		})
+		protected.GET("/edit-category", func(c *gin.Context) {
+			c.File("./templates/edit-category.html")
+		})
 		protected.GET("/create-category-sub", func(c *gin.Context) {
 			c.File("./templates/create-category-sub.html")
+		})
+		protected.GET("/edit-category-sub", func(c *gin.Context) {
+			c.File("./templates/edit-category-sub.html")
 		})
 		protected.GET("/create-customer", func(c *gin.Context) {
 			c.File("./templates/create-customer.html")

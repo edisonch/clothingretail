@@ -1,5 +1,11 @@
+// Detect mode from script tag data attribute
+const scriptTag = document.currentScript;
+const mode = scriptTag && scriptTag.dataset.mode === 'edit' ? 'edit' : 'create';
+const isEditMode = mode === 'edit';
+
 // Get DOM elements
 const form = document.getElementById('categorySubForm');
+const subcategoryIdInput = document.getElementById('subcategoryId');
 const parentCategorySelect = document.getElementById('parentCategory');
 const subCategoryNameInput = document.getElementById('subCategoryName');
 const subCategoryLocationInput = document.getElementById('subCategoryLocation');
@@ -9,6 +15,9 @@ const messageDiv = document.getElementById('message');
 const loadingDiv = document.getElementById('loading');
 const submitBtn = document.getElementById('submitBtn');
 const cancelBtn = document.getElementById('cancelBtn');
+const loadingContainer = document.getElementById('loadingContainer');
+const createdAtSpan = document.getElementById('createdAt');
+const updatedAtSpan = document.getElementById('updatedAt');
 
 // Store base64 images
 const pictureData = {
@@ -19,22 +28,146 @@ const pictureData = {
     picture5: null
 };
 
-// Load categories on page load
-document.addEventListener('DOMContentLoaded', loadCategories);
+// Store data for display
+let categories = [];
+
+// Load data on page load
+document.addEventListener('DOMContentLoaded', function() {
+    loadCategories();
+    if (isEditMode) {
+        loadSubcategoryData();
+    }
+});
+
+// Load subcategory data for editing
+async function loadSubcategoryData() {
+    // Get subcategory ID from URL query parameter
+    const urlParams = new URLSearchParams(window.location.search);
+    const subcategoryId = urlParams.get('id');
+
+    if (!subcategoryId) {
+        showMessage('No subcategory ID provided', 'error');
+        if (loadingContainer) loadingContainer.style.display = 'none';
+        return;
+    }
+
+    try {
+        const response = await fetch(`/api/categories-sub/${subcategoryId}`);
+
+        if (response.ok) {
+            const subcategory = await response.json();
+
+            // Wait for categories to load first
+            await waitForCategories();
+
+            // Populate form fields
+            subcategoryIdInput.value = subcategory.id;
+            parentCategorySelect.value = subcategory.id_clothing_category;
+            subCategoryNameInput.value = subcategory.clothes_cat_name_sub;
+            subCategoryLocationInput.value = subcategory.clothes_cat_location_sub;
+
+            // Load existing pictures
+            for (let i = 1; i <= 5; i++) {
+                const pictureKey = `picture${i}`;
+                const base64Data = subcategory[`clothes_picture_${i}`];
+                if (base64Data) {
+                    pictureData[pictureKey] = base64Data;
+                    const preview = document.getElementById(`preview${i}`);
+                    preview.style.backgroundImage = `url(${base64Data})`;
+                    preview.classList.add('active');
+                }
+            }
+
+            // Update character counts
+            updateCharCount(subCategoryNameInput, nameCount, 32);
+            updateCharCount(subCategoryLocationInput, locationCount, 64);
+
+            // Update metadata
+            if (createdAtSpan) {
+                createdAtSpan.textContent = formatDateTime(subcategory.created_at);
+            }
+            if (updatedAtSpan) {
+                updatedAtSpan.textContent = formatDateTime(subcategory.updated_at);
+            }
+
+            // Show form, hide loading
+            if (loadingContainer) loadingContainer.style.display = 'none';
+            form.style.display = 'block';
+        } else {
+            const data = await response.json();
+            showMessage(`Error: ${data.error || 'Subcategory not found'}`, 'error');
+            if (loadingContainer) loadingContainer.style.display = 'none';
+        }
+    } catch (error) {
+        showMessage(`Network error: ${error.message}`, 'error');
+        if (loadingContainer) loadingContainer.style.display = 'none';
+    }
+}
+
+// Wait for categories to load
+function waitForCategories() {
+    return new Promise((resolve) => {
+        const checkInterval = setInterval(() => {
+            if (categories.length > 0) {
+                clearInterval(checkInterval);
+                resolve();
+            }
+        }, 100);
+
+        // Timeout after 5 seconds
+        setTimeout(() => {
+            clearInterval(checkInterval);
+            resolve();
+        }, 5000);
+    });
+}
+
+// Format datetime for display
+function formatDateTime(dateString) {
+    const date = new Date(dateString);
+    return date.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'short',
+        day: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit'
+    });
+}
+
+// Update character count
+function updateCharCount(input, counter, maxLength) {
+    const length = input.value.length;
+    counter.textContent = `${length} / ${maxLength}`;
+
+    if (length >= maxLength) {
+        counter.classList.add('error');
+        counter.classList.remove('warning');
+    } else if (length >= maxLength * 0.85) {
+        counter.classList.add('warning');
+        counter.classList.remove('error');
+    } else {
+        counter.classList.remove('warning', 'error');
+    }
+}
 
 // Load categories from API
 async function loadCategories() {
     try {
         const response = await fetch('/api/categories');
         if (response.ok) {
-            const categories = await response.json();
-
+            categories = await response.json();
             categories.forEach(category => {
                 const option = document.createElement('option');
                 option.value = category.id;
                 option.textContent = category.clothes_cat_name;
                 parentCategorySelect.appendChild(option);
             });
+
+            // Show form if in create mode
+            if (!isEditMode) {
+                if (loadingContainer) loadingContainer.style.display = 'none';
+                form.style.display = 'block';
+            }
         } else {
             showMessage('Failed to load categories', 'error');
         }
@@ -45,32 +178,12 @@ async function loadCategories() {
 
 // Character counter for subcategory name
 subCategoryNameInput.addEventListener('input', function() {
-    const length = this.value.length;
-    nameCount.textContent = `${length} / 32`;
-
-    if (length >= 32) {
-        nameCount.classList.add('error');
-    } else if (length >= 25) {
-        nameCount.classList.add('warning');
-        nameCount.classList.remove('error');
-    } else {
-        nameCount.classList.remove('warning', 'error');
-    }
+    updateCharCount(this, nameCount, 32);
 });
 
 // Character counter for location
 subCategoryLocationInput.addEventListener('input', function() {
-    const length = this.value.length;
-    locationCount.textContent = `${length} / 64`;
-
-    if (length >= 64) {
-        locationCount.classList.add('error');
-    } else if (length >= 55) {
-        locationCount.classList.add('warning');
-        locationCount.classList.remove('error');
-    } else {
-        locationCount.classList.remove('warning', 'error');
-    }
+    updateCharCount(this, locationCount, 64);
 });
 
 // Handle picture uploads
@@ -158,28 +271,47 @@ form.addEventListener('submit', async function(e) {
     messageDiv.style.display = 'none';
 
     try {
-        const response = await fetch('/api/categories-sub', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(formData)
-        });
+        let response;
+
+        if (isEditMode) {
+            // Update existing subcategory
+            const subcategoryId = subcategoryIdInput.value;
+            response = await fetch(`/api/categories-sub/${subcategoryId}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+        } else {
+            // Create new subcategory
+            response = await fetch('/api/categories-sub', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(formData)
+            });
+        }
 
         const data = await response.json();
 
         if (response.ok) {
-            showMessage('Subcategory created successfully!', 'success');
-            form.reset();
-            nameCount.textContent = '0 / 32';
-            locationCount.textContent = '0 / 64';
+            const successMessage = isEditMode ? 'Subcategory updated successfully!' : 'Subcategory created successfully!';
+            showMessage(successMessage, 'success');
 
-            // Clear all picture previews
-            for (let i = 1; i <= 5; i++) {
-                const preview = document.getElementById(`preview${i}`);
-                preview.style.backgroundImage = '';
-                preview.classList.remove('active');
-                pictureData[`picture${i}`] = null;
+            if (!isEditMode) {
+                form.reset();
+                nameCount.textContent = '0 / 32';
+                locationCount.textContent = '0 / 64';
+
+                // Clear all picture previews
+                for (let i = 1; i <= 5; i++) {
+                    const preview = document.getElementById(`preview${i}`);
+                    preview.style.backgroundImage = '';
+                    preview.classList.remove('active');
+                    pictureData[`picture${i}`] = null;
+                }
             }
 
             // Redirect after 2 seconds
@@ -187,7 +319,8 @@ form.addEventListener('submit', async function(e) {
                 window.location.href = '/';
             }, 2000);
         } else {
-            showMessage(`Error: ${data.error || 'Failed to create subcategory'}`, 'error');
+            const errorMessage = isEditMode ? 'Failed to update subcategory' : 'Failed to create subcategory';
+            showMessage(`Error: ${data.error || errorMessage}`, 'error');
         }
     } catch (error) {
         showMessage(`Network error: ${error.message}`, 'error');
