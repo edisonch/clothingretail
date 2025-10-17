@@ -15,7 +15,7 @@ type ClothingRental struct {
 	ClothesRentDateEnd          time.Time `json:"clothes_rent_date_end"`
 	ClothesRentDateActualPickup time.Time `json:"clothes_rent_date_actual_pickup"`
 	ClothesRentDateActualReturn time.Time `json:"clothes_rent_date_actual_return"`
-	ClothesCatStatusSub         int       `json:"clothes_cat_status_sub"`
+	ClothesRentStatus           int       `json:"clothes_rent_status"`
 	CreatedAt                   time.Time `json:"created_at"`
 	UpdatedAt                   time.Time `json:"updated_at"`
 }
