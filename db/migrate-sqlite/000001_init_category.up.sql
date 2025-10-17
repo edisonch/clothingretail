@@ -64,7 +64,8 @@ create table if not exists clothing_size (
 -- id contains the id for inventory movement
 -- id_clothing_category_sub contains the id for the category_sub
 -- id_clothing_size contains the id for the size
--- clothes_movement_action contains the action of the inventory movement: 1 = rent, 2 = return, 3 = add, 4 = remove
+-- clothes_movement_action contains the action of the inventory movement:
+-- 1 = BUY, 2 = SELL , 3 = RENT, 4 = RETURN, 5 = CANCEL, 6 = NOT RETURN, 7 = LOSS
 -- clothes_qty_in contains the quantity of the inventory movement in
 -- clothes_qty_out contains the quantity of the inventory movement out
 -- clothes_qty_total contains the total quantity of the inventory movement
@@ -114,7 +115,7 @@ create table if not exists clothing_customer (
 -- id_clothing_customer contains the id for the customer
 -- clothes_qty_rent contains the quantity of the rental
 -- clothes_qty_return contains the quantity of the return
--- clothes_cat_status_sub contains the status of the rental: 1 = active, 2 = cancel, 3 = return, 4 = loss
+-- clothes_rent_status contains the status of the rental: 1 = rent, 2 = return, 3 = cancel, 4 = not_return, 5 = loss
 -- clothes_rent_date_begin contains the date and time when the rental is begin
 -- clothes_rent_date_end contains the date and time when the rental is end
 -- clothes_rent_date_actual_pickup contains the date and time when the pickup is actual pickup
@@ -132,7 +133,7 @@ create table if not exists clothing_rental (
     clothes_rent_date_end datetime not null,
     clothes_rent_date_actual_pickup datetime not null,
     clothes_rent_date_actual_return datetime not null,
-    clothes_cat_status_sub integer not null default 1,
+    clothes_rent_status integer not null default 1,
     created_at datetime not null,
     updated_at datetime not null
 );
@@ -141,7 +142,7 @@ create table if not exists clothing_rental (
 -- id contains the id for users
 -- username contains the username of the users limit to 32 characters
 -- pin contains the pin of the users limit to 6 digits
--- user_status contains the status of the users: 1 = active, 2 = inactive
+-- user_status contains the status of the users: 1 = active, 2 = inactive, 3 = suspended
 -- created_at contains the date and time when the users is created
 -- updated_at contains the date and time when the users is updated
 create table if not exists clothing_users (
