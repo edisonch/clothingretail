@@ -233,7 +233,7 @@ func GetRentals(c *gin.Context) {
 
 	query := `SELECT id, id_clothing_category_sub, id_clothing_size, id_clothing_customer, 
                   clothes_qty_rent, clothes_qty_return, clothes_rent_date_begin, clothes_rent_date_end, 
-                  clothes_rent_date_actual_pickup, clothes_rent_date_actual_return, clothes_rent_status, 
+                  clothes_rent_date_actual_pickup, clothes_rent_date_actual_return, clothes_cat_status_sub, 
                   created_at, updated_at FROM clothing_rental WHERE 1=1`
 
 	var args []interface{}
