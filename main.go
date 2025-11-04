@@ -45,11 +45,13 @@ func main() {
 	{
 		// Serve index page (protected)
 		protected.GET("/", func(c *gin.Context) {
+			log.Println("Come to index")
 			c.File("./templates/index.html")
 		})
 
 		// HTML page routes (protected)
 		protected.GET("/create-category", func(c *gin.Context) {
+			log.Println("Creating category")
 			c.File("./templates/create-category.html")
 		})
 		protected.GET("/edit-category", func(c *gin.Context) {
