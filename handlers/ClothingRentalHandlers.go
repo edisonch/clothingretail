@@ -5,6 +5,7 @@ import (
 	"clothingretail/models"
 	"clothingretail/utils"
 	"fmt"
+	"log"
 	"net/http"
 	"time"
 
@@ -223,4 +224,59 @@ func ReturnClothing(c *gin.Context) {
 		"message": "Return processed successfully",
 		"status":  newStatus,
 	})
+}
+
+// GetRentals retrieves all rentals
+func GetRentals(c *gin.Context) {
+	customerID := c.Query("customer_id")
+	status := c.Query("status")
+
+	query := `SELECT id, id_clothing_category_sub, id_clothing_size, id_clothing_customer, 
+                  clothes_qty_rent, clothes_qty_return, clothes_rent_date_begin, clothes_rent_date_end, 
+                  clothes_rent_date_actual_pickup, clothes_rent_date_actual_return, clothes_rent_status, 
+                  created_at, updated_at FROM clothing_rental WHERE 1=1`
+
+	var args []interface{}
+
+	if customerID != "" {
+		query += " AND id_clothing_customer = ?"
+		args = append(args, customerID)
+	}
+
+	if status != "" {
+		query += " AND clothes_rent_status = ?"
+		args = append(args, status)
+	}
+
+	query += " ORDER BY created_at DESC"
+
+	log.Printf("Executing query: %s with args: %v", query, args)
+
+	rows, err := db.DB.Query(query, args...)
+	if err != nil {
+		log.Printf("Error querying rentals: %v", err)
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	defer rows.Close()
+
+	// Initialize with empty slice instead of nil
+	rentals := []models.ClothingRental{}
+
+	for rows.Next() {
+		var rental models.ClothingRental
+		if err := rows.Scan(&rental.ID, &rental.IDClothingCategorySub, &rental.IDClothingSize,
+			&rental.IDClothingCustomer, &rental.ClothesQtyRent, &rental.ClothesQtyReturn,
+			&rental.ClothesRentDateBegin, &rental.ClothesRentDateEnd, &rental.ClothesRentDateActualPickup,
+			&rental.ClothesRentDateActualReturn, &rental.ClothesRentStatus, &rental.CreatedAt,
+			&rental.UpdatedAt); err != nil {
+			log.Printf("Error scanning rental: %v", err)
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		rentals = append(rentals, rental)
+	}
+
+	log.Printf("Returning %d rentals", len(rentals))
+	c.JSON(http.StatusOK, rentals)
 }
