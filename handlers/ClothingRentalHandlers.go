@@ -4,6 +4,7 @@ import (
 	"clothingretail/db"
 	"clothingretail/models"
 	"clothingretail/utils"
+	"fmt"
 	"net/http"
 	"time"
 
@@ -20,13 +21,13 @@ func RentClothing(c *gin.Context) {
 	}
 
 	// Parse dates
-	dateBegin, err := time.Parse("2006-01-02", req.RentDateBegin)
+	dateBegin, err := parseDateTime(req.RentDateBegin)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid rent begin date format. Use YYYY-MM-DD"})
 		return
 	}
 
-	dateEnd, err := time.Parse("2006-01-02", req.RentDateEnd)
+	dateEnd, err := parseDateTime(req.RentDateEnd)
 	if err != nil {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid rent end date format. Use YYYY-MM-DD"})
 		return
@@ -193,4 +194,23 @@ func GetRentals(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, rentals)
+}
+
+// Helper function to parse multiple date/datetime formats
+func parseDateTime(dateStr string) (time.Time, error) {
+	// Try different formats
+	formats := []string{
+		"2006-01-02T15:04", // HTML datetime-local format
+		"2006-01-02 15:04", // Common datetime format
+		"2006-01-02",       // Date only
+		time.RFC3339,       // ISO 8601
+	}
+
+	for _, format := range formats {
+		if t, err := time.Parse(format, dateStr); err == nil {
+			return t, nil
+		}
+	}
+
+	return time.Time{}, fmt.Errorf("unable to parse date: %s", dateStr)
 }
