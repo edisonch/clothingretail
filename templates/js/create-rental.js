@@ -126,29 +126,31 @@ subcategorySelect.addEventListener('change', async function() {
 
     if (!this.value) return;
 
-    // Note: You may need to implement a sizes API endpoint
-    // For now, we'll create a placeholder
-    // In a real implementation, you would fetch sizes from /api/sizes?subcategory_id=X
+    try {
+        const response = await fetch(`/api/sizes?subcategory_id=${this.value}`);
+        if (response.ok) {
+            sizes = await response.json();
 
-    // Placeholder implementation - assuming sizes are stored somewhere
-    // You may need to modify this based on your actual API structure
-    const placeholderSizes = [
-        { id: 1, name: 'XS' },
-        { id: 2, name: 'S' },
-        { id: 3, name: 'M' },
-        { id: 4, name: 'L' },
-        { id: 5, name: 'XL' },
-        { id: 6, name: 'XXL' }
-    ];
+            if (sizes.length === 0) {
+                sizeSelect.innerHTML = '<option value="">No sizes available</option>';
+                showMessage('No sizes available for this subcategory', 'error');
+                return;
+            }
 
-    placeholderSizes.forEach(size => {
-        const option = document.createElement('option');
-        option.value = size.id;
-        option.textContent = size.name;
-        sizeSelect.appendChild(option);
-    });
+            sizes.forEach(size => {
+                const option = document.createElement('option');
+                option.value = size.id;
+                option.textContent = size.clothes_size_name;
+                sizeSelect.appendChild(option);
+            });
 
-    sizeSelect.disabled = false;
+            sizeSelect.disabled = false;
+        } else {
+            showMessage('Failed to load sizes', 'error');
+        }
+    } catch (error) {
+        showMessage(`Error loading sizes: ${error.message}`, 'error');
+    }
 });
 
 // Update info box

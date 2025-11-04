@@ -196,6 +196,62 @@ func GetRentals(c *gin.Context) {
 	c.JSON(http.StatusOK, rentals)
 }
 
+// GetSizes retrieves all sizes, optionally filtered by subcategory
+func GetSizes(c *gin.Context) {
+	subcategoryID := c.Query("subcategory_id")
+
+	query := `SELECT id, id_clothing_category_sub, clothes_size_name, clothes_size_notes, 
+              clothes_size_status, created_at, updated_at 
+              FROM clothing_size WHERE clothes_size_status = 1`
+
+	var args []interface{}
+
+	if subcategoryID != "" {
+		query += " AND id_clothing_category_sub = ?"
+		args = append(args, subcategoryID)
+	}
+
+	query += " ORDER BY clothes_size_name"
+
+	rows, err := db.DB.Query(query, args...)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		return
+	}
+	defer rows.Close()
+
+	var sizes []struct {
+		ID                    int       `json:"id"`
+		IDClothingCategorySub int       `json:"id_clothing_category_sub"`
+		ClothesSizeName       string    `json:"clothes_size_name"`
+		ClothesSizeNotes      string    `json:"clothes_size_notes"`
+		ClothesSizeStatus     int       `json:"clothes_size_status"`
+		CreatedAt             time.Time `json:"created_at"`
+		UpdatedAt             time.Time `json:"updated_at"`
+	}
+
+	for rows.Next() {
+		var size struct {
+			ID                    int       `json:"id"`
+			IDClothingCategorySub int       `json:"id_clothing_category_sub"`
+			ClothesSizeName       string    `json:"clothes_size_name"`
+			ClothesSizeNotes      string    `json:"clothes_size_notes"`
+			ClothesSizeStatus     int       `json:"clothes_size_status"`
+			CreatedAt             time.Time `json:"created_at"`
+			UpdatedAt             time.Time `json:"updated_at"`
+		}
+		if err := rows.Scan(&size.ID, &size.IDClothingCategorySub, &size.ClothesSizeName,
+			&size.ClothesSizeNotes, &size.ClothesSizeStatus, &size.CreatedAt,
+			&size.UpdatedAt); err != nil {
+			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+			return
+		}
+		sizes = append(sizes, size)
+	}
+
+	c.JSON(http.StatusOK, sizes)
+}
+
 // Helper function to parse multiple date/datetime formats
 func parseDateTime(dateStr string) (time.Time, error) {
 	// Try different formats

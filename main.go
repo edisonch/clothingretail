@@ -98,6 +98,9 @@ func main() {
 			api.GET("/customers", handlers.GetCustomers)
 			api.GET("/customers/:id", handlers.GetCustomerByID)
 
+			// Size routes
+			api.GET("/sizes", handlers.GetSizes)
+
 			// Rental routes
 			api.POST("/rentals", handlers.RentClothing)
 			api.POST("/rentals/return", handlers.ReturnClothing)
