@@ -220,7 +220,8 @@ func GetSizes(c *gin.Context) {
 	}
 	defer rows.Close()
 
-	var sizes []struct {
+	// Initialize with empty slice instead of nil
+	sizes := []struct {
 		ID                    int       `json:"id"`
 		IDClothingCategorySub int       `json:"id_clothing_category_sub"`
 		ClothesSizeName       string    `json:"clothes_size_name"`
@@ -228,7 +229,7 @@ func GetSizes(c *gin.Context) {
 		ClothesSizeStatus     int       `json:"clothes_size_status"`
 		CreatedAt             time.Time `json:"created_at"`
 		UpdatedAt             time.Time `json:"updated_at"`
-	}
+	}{}
 
 	for rows.Next() {
 		var size struct {

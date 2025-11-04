@@ -119,6 +119,7 @@ categorySelect.addEventListener('change', async function() {
     }
 });
 
+
 // Load sizes when subcategory is selected
 subcategorySelect.addEventListener('change', async function() {
     sizeSelect.innerHTML = '<option value="">Select a size...</option>';
@@ -131,9 +132,10 @@ subcategorySelect.addEventListener('change', async function() {
         if (response.ok) {
             sizes = await response.json();
 
-            if (sizes.length === 0) {
+            // Handle null or empty response
+            if (!sizes || sizes.length === 0) {
                 sizeSelect.innerHTML = '<option value="">No sizes available</option>';
-                showMessage('No sizes available for this subcategory', 'error');
+                showMessage('No sizes available for this subcategory. Please create sizes first.', 'error');
                 return;
             }
 
