@@ -68,7 +68,7 @@ func GetCategoriesSub(c *gin.Context) {
 	}
 	defer rows.Close()
 
-	var categoriesSub []models.ClothingCategorySub
+	categoriesSub := []models.ClothingCategorySub{}
 	for rows.Next() {
 		var categorySub models.ClothingCategorySub
 		if err := rows.Scan(&categorySub.ID, &categorySub.IDClothingCategory, &categorySub.ClothesCatNameSub,
