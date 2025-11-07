@@ -194,7 +194,7 @@ func ReturnClothing(c *gin.Context) {
 	// Update rental record - Fixed: use clothes_rent_status instead of clothes_cat_status_sub
 	_, err = db.DB.Exec(
 		`UPDATE clothing_rental SET clothes_qty_return = ?, clothes_rent_date_actual_return = ?, 
-         clothes_cat_status_sub = ?, updated_at = ? WHERE id = ?`,
+             clothes_rent_status = ?, updated_at = ? WHERE id = ?`,
 		newReturnQty, now, newStatus, now, req.RentalID,
 	)
 
