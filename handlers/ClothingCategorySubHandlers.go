@@ -78,6 +78,7 @@ func GetCategoriesSub(c *gin.Context) {
 			&categorySub.ClothesCatLocationSub, &categorySub.ClothesPicture1, &categorySub.ClothesPicture2,
 			&categorySub.ClothesPicture3, &categorySub.ClothesPicture4, &categorySub.ClothesPicture5,
 			&categorySub.ClothesCatStatusSub, &categorySub.CreatedAt, &categorySub.UpdatedAt); err != nil {
+			fmt.Printf("Error scanning category sub: %v\n", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
