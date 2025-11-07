@@ -265,15 +265,24 @@ func GetRentals(c *gin.Context) {
 
 	for rows.Next() {
 		var rental models.ClothingRental
+		var dateBegin, dateEnd, datePickup, dateReturn, createdAt, updatedAt string
+
 		if err := rows.Scan(&rental.ID, &rental.IDClothingCategorySub, &rental.IDClothingSize,
 			&rental.IDClothingCustomer, &rental.ClothesQtyRent, &rental.ClothesQtyReturn,
-			&rental.ClothesRentDateBegin, &rental.ClothesRentDateEnd, &rental.ClothesRentDateActualPickup,
-			&rental.ClothesRentDateActualReturn, &rental.ClothesRentStatus, &rental.CreatedAt,
-			&rental.UpdatedAt); err != nil {
+			&dateBegin, &dateEnd, &datePickup, &dateReturn,
+			&rental.ClothesRentStatus, &createdAt, &updatedAt); err != nil {
 			log.Printf("Error scanning rental: %v", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
+
+		// Parse datetime strings to time.Time
+		rental.ClothesRentDateBegin, _ = time.Parse("2006-01-02 15:04:05", dateBegin)
+		rental.ClothesRentDateEnd, _ = time.Parse("2006-01-02 15:04:05", dateEnd)
+		rental.ClothesRentDateActualPickup, _ = time.Parse("2006-01-02 15:04:05", datePickup)
+		rental.ClothesRentDateActualReturn, _ = time.Parse("2006-01-02 15:04:05", dateReturn)
+		rental.CreatedAt, _ = time.Parse("2006-01-02 15:04:05", createdAt)
+		rental.UpdatedAt, _ = time.Parse("2006-01-02 15:04:05", updatedAt)
 		rentals = append(rentals, rental)
 	}
 
