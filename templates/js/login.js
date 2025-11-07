@@ -1,5 +1,11 @@
 document.addEventListener('DOMContentLoaded', function() {
     const loginForm = document.getElementById('loginForm');
+
+    // Only run login form logic if we're on the login page
+    if (!loginForm) {
+        return;
+    }
+
     const usernameInput = document.getElementById('username');
     const pinInput = document.getElementById('pin');
     const usernameError = document.getElementById('username-error');
