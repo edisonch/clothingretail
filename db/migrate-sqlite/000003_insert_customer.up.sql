@@ -1,0 +1,1 @@
+insert into clothing_customer values (1,'Favorite Customer','Jl HR Rasuna Said Kav. 50-52','Jakarta','6221-3146688','cs@clothing.com','favorite clothing',1,datetime('now'),datetime('now'));
