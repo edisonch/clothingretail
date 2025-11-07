@@ -83,7 +83,7 @@ func GetCategoriesSub(c *gin.Context) {
 		}
 		categoriesSub = append(categoriesSub, categorySub)
 	}
-
+	fmt.Printf("Categories Sub: %v\n", categoriesSub)
 	c.JSON(http.StatusOK, categoriesSub)
 }
 
