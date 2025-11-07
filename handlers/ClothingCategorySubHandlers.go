@@ -4,6 +4,7 @@ import (
 	"clothingretail/db"
 	"clothingretail/models"
 	"database/sql"
+	"log"
 	"net/http"
 	"time"
 
@@ -35,6 +36,7 @@ func CreateCategorySub(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		log.Printf("Error inserting category sub: %v\n", err)
 		return
 	}
 
@@ -64,6 +66,7 @@ func GetCategoriesSub(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		log.Printf("Error scanning categories: %v\n", err)
 		return
 	}
 	defer rows.Close()
@@ -101,6 +104,7 @@ func GetCategorySubByID(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusNotFound, gin.H{"error": "Subcategory not found"})
+		log.Printf("Error scanning category sub: %v\n", err)
 		return
 	}
 
@@ -130,6 +134,7 @@ func UpdateCategorySub(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		log.Printf("Error updating category sub: %v\n", err)
 		return
 	}
 
@@ -147,6 +152,7 @@ func DeleteCategorySub(c *gin.Context) {
 
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
+		log.Printf("Error deleting category sub: %v\n", err)
 		return
 	}
 
