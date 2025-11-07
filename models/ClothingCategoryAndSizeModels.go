@@ -18,11 +18,11 @@ type ClothingCategorySub struct {
 	IDClothingCategory    int       `json:"id_clothing_category"`
 	ClothesCatNameSub     string    `json:"clothes_cat_name_sub"`
 	ClothesCatLocationSub string    `json:"clothes_cat_location_sub"`
-	ClothesPicture1       string    `json:"clothes_picture_1"`
-	ClothesPicture2       string    `json:"clothes_picture_2"`
-	ClothesPicture3       string    `json:"clothes_picture_3"`
-	ClothesPicture4       string    `json:"clothes_picture_4"`
-	ClothesPicture5       string    `json:"clothes_picture_5"`
+	ClothesPicture1       *string   `json:"clothes_picture_1"`
+	ClothesPicture2       *string   `json:"clothes_picture_2"`
+	ClothesPicture3       *string   `json:"clothes_picture_3"`
+	ClothesPicture4       *string   `json:"clothes_picture_4"`
+	ClothesPicture5       *string   `json:"clothes_picture_5"`
 	ClothesCatStatusSub   int       `json:"clothes_cat_status_sub"`
 	CreatedAt             time.Time `json:"created_at"`
 	UpdatedAt             time.Time `json:"updated_at"`

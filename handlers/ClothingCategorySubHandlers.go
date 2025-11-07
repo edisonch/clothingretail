@@ -51,8 +51,8 @@ func GetCategoriesSub(c *gin.Context) {
 	categoryID := c.Query("category_id")
 
 	query := `SELECT id, id_clothing_category, clothes_cat_name_sub, clothes_cat_location_sub, 
-              clothes_picture_1, clothes_picture_2, clothes_picture_3, clothes_picture_4, clothes_picture_5, 
-              clothes_cat_status_sub, created_at, updated_at FROM clothing_category_sub WHERE clothes_cat_status_sub = 1`
+                  clothes_picture_1, clothes_picture_2, clothes_picture_3, clothes_picture_4, clothes_picture_5, 
+                  clothes_cat_status_sub, created_at, updated_at FROM clothing_category_sub WHERE clothes_cat_status_sub = 1`
 
 	var rows *sql.Rows
 	var err error
@@ -74,14 +74,34 @@ func GetCategoriesSub(c *gin.Context) {
 	categoriesSub := []models.ClothingCategorySub{}
 	for rows.Next() {
 		var categorySub models.ClothingCategorySub
+		// Use sql.NullString for nullable fields
+		var pic1, pic2, pic3, pic4, pic5 sql.NullString
+
 		if err := rows.Scan(&categorySub.ID, &categorySub.IDClothingCategory, &categorySub.ClothesCatNameSub,
-			&categorySub.ClothesCatLocationSub, &categorySub.ClothesPicture1, &categorySub.ClothesPicture2,
-			&categorySub.ClothesPicture3, &categorySub.ClothesPicture4, &categorySub.ClothesPicture5,
+			&categorySub.ClothesCatLocationSub, &pic1, &pic2, &pic3, &pic4, &pic5,
 			&categorySub.ClothesCatStatusSub, &categorySub.CreatedAt, &categorySub.UpdatedAt); err != nil {
 			fmt.Printf("Error scanning category sub: %v\n", err)
 			c.JSON(http.StatusInternalServerError, gin.H{"error": err.Error()})
 			return
 		}
+
+		// Convert NullString to *string (pointer, nil if NULL)
+		if pic1.Valid {
+			categorySub.ClothesPicture1 = &pic1.String
+		}
+		if pic2.Valid {
+			categorySub.ClothesPicture2 = &pic2.String
+		}
+		if pic3.Valid {
+			categorySub.ClothesPicture3 = &pic3.String
+		}
+		if pic4.Valid {
+			categorySub.ClothesPicture4 = &pic4.String
+		}
+		if pic5.Valid {
+			categorySub.ClothesPicture5 = &pic5.String
+		}
+
 		categoriesSub = append(categoriesSub, categorySub)
 	}
 	fmt.Printf("Categories Sub: %v\n", categoriesSub)
@@ -92,6 +112,7 @@ func GetCategoriesSub(c *gin.Context) {
 func GetCategorySubByID(c *gin.Context) {
 	id := c.Param("id")
 	var categorySub models.ClothingCategorySub
+	var pic1, pic2, pic3, pic4, pic5 sql.NullString
 
 	err := db.DB.QueryRow(
 		`SELECT id, id_clothing_category, clothes_cat_name_sub, clothes_cat_location_sub, 
@@ -99,8 +120,7 @@ func GetCategorySubByID(c *gin.Context) {
          clothes_cat_status_sub, created_at, updated_at FROM clothing_category_sub WHERE id = ?`,
 		id,
 	).Scan(&categorySub.ID, &categorySub.IDClothingCategory, &categorySub.ClothesCatNameSub,
-		&categorySub.ClothesCatLocationSub, &categorySub.ClothesPicture1, &categorySub.ClothesPicture2,
-		&categorySub.ClothesPicture3, &categorySub.ClothesPicture4, &categorySub.ClothesPicture5,
+		&categorySub.ClothesCatLocationSub, &pic1, &pic2, &pic3, &pic4, &pic5,
 		&categorySub.ClothesCatStatusSub, &categorySub.CreatedAt, &categorySub.UpdatedAt)
 
 	if err != nil {
@@ -108,7 +128,22 @@ func GetCategorySubByID(c *gin.Context) {
 		fmt.Printf("Error scanning category sub: %v\n", err)
 		return
 	}
-
+	// Convert NullString to *string (pointer, nil if NULL)
+	if pic1.Valid {
+		categorySub.ClothesPicture1 = &pic1.String
+	}
+	if pic2.Valid {
+		categorySub.ClothesPicture2 = &pic2.String
+	}
+	if pic3.Valid {
+		categorySub.ClothesPicture3 = &pic3.String
+	}
+	if pic4.Valid {
+		categorySub.ClothesPicture4 = &pic4.String
+	}
+	if pic5.Valid {
+		categorySub.ClothesPicture5 = &pic5.String
+	}
 	c.JSON(http.StatusOK, categorySub)
 }
 
