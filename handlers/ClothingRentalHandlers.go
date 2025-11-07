@@ -117,11 +117,11 @@ func RentClothing(c *gin.Context) {
 	// Insert rental record - Fixed: use clothes_rent_status instead of clothes_cat_status_sub
 	_, err = db.DB.Exec(
 		`INSERT INTO clothing_rental (id, id_clothing_category_sub, id_clothing_size, id_clothing_customer, 
-         clothes_qty_rent, clothes_qty_return, clothes_rent_date_begin, clothes_rent_date_end, 
-         clothes_rent_date_actual_pickup, clothes_rent_date_actual_return, clothes_cat_status_sub, 
-         created_at, updated_at) VALUES (?, ?, ?, ?, ?, 0, ?, ?, ?, '0001-01-01', 1, ?, ?)`,
-		rentalID, req.IDClothingCategorySub, req.IDClothingSize, req.IDClothingCustomer, req.ClothesQtyRent,
-		dateBegin, dateEnd, now, now, now,
+         clothes_qty_rent, clothes_qty_return, 
+		 clothes_rent_date_begin, clothes_rent_date_end, clothes_rent_date_actual_pickup, clothes_rent_date_actual_return, 
+		 clothes_rent_status, created_at, updated_at) VALUES (?, ?, ?, ?, ?, 0, ?, ?, ?, '0001-01-01', 1, ?, ?)`,
+		rentalID, req.IDClothingCategorySub, req.IDClothingSize, req.IDClothingCustomer, req.ClothesQtyRent, 0,
+		dateBegin, dateEnd, dateBegin, dateEnd, 1, now, now,
 	)
 
 	if err != nil {
